@@ -1,0 +1,43 @@
+4)Build a simple linear regression model for Fish Species Weight Prediction. (download dataset https://www.kaggle.com/aungpyaeap/fish-market?select=Fish.csv )
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn import linear_model
+from sklearn.model_selection import train_test_split
+df = pd.read_csv(r"F:\T.Y.B.SC(CS)-SEM 6\Prac DA\Fish.csv")
+print('Shape of dataset= ', df.shape) 
+print(df.head(5))
+df.rename(columns={'Length1':'VerticalLen','Length2':'DiagonalLen','Length3':'CrossLen'},inplace = True)
+print(df.sample(5)) 
+print(df.Species.value_counts())
+df_sp = df.Species.value_counts()
+df_sp = pd.DataFrame(df_sp)
+print(df_sp.T) 
+X = df[['Height','Width']] 
+X.head()
+y = df[['Weight']]
+y.head(5)
+X_train,X_test, y_train, y_test = train_test_split(X, y, test_size =0.2, random_state = 42) 
+print('X_train dimension= ', X_train.shape)
+print('X_test dimension= ', X_test.shape)
+print('y_train dimension= ', y_train.shape)
+print('y_train dimension= ', y_test.shape)
+model = linear_model.LinearRegression()
+print(model.fit(X_train,y_train))
+print('coef= ', model.coef_) 
+print('intercept= ', model.intercept_)
+print('score= ', model.score(X_test,y_test))
+predictedWeight = pd.DataFrame(model.predict(X_test), columns=['Predicted Weight']) 
+actualWeight = pd.DataFrame(y_test)
+actualWeight = actualWeight.reset_index(drop=True) 
+df_actual_vs_predicted = pd.concat([actualWeight,predictedWeight],axis =1)
+print(df_actual_vs_predicted.T)
+plt.scatter(X_test['Height'], y_test, color='red', label = 'Actual Weight')
+plt.scatter(X_test['Height'], model.predict(X_test), color='green', label = 'Prdicted Weight')
+plt.xlabel('Height')
+plt.ylabel('Weight')
+plt.rcParams["figure.figsize"] = (10,6) # Custom figure size in inches
+plt.title('Actual Vs Predicted Weight for Test Data')
+plt.legend()
+plt.show()

@@ -1,0 +1,28 @@
+Iris.csv      
+import pandas as pd
+import numpy as np
+import os
+import matplotlib.pyplot as plt
+import seaborn as sns
+df = pd.read_csv("F:\T.Y.B.SC(CS)-SEM 6\Prac DA\Iris.csv")
+print(df.head(5))
+df = df.drop(columns = ['Id'])
+print(df.head(5))
+df.info()
+print(df['Species'].value_counts())
+print(df.isnull().sum())
+plt.hist(df['SepalLengthCm'])
+plt.hist(df['SepalWidthCm'])
+plt.hist(df['PetalLengthCm'])
+plt.hist(df['PetalWidthCm'])
+print(df.corr())
+from sklearn.preprocessing import LabelEncoder
+le = LabelEncoder()
+df['Species'] = le.fit_transform(df['Species'])
+print(df.head(100))
+from sklearn.model_selection import train_test_split
+X = df.drop(columns = ['Species'])
+Y = df['Species']
+X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size = 0.25)
+from sklearn.linear_model import LogisticRegression
+model = LogisticRegression()    model.fit(X_train, Y_train)    print("Accuracy: ", model.score(X_test, Y_test) * 100)

@@ -1,0 +1,45 @@
+16)Consider any text paragraph. Preprocess the text to remove any special characters and digits. Generate the summary using extractive summarization process.
+import nltk
+#Preprocessing
+import re
+text="""So, keep working. Keep striving. Never give up. Fall down seven times,
+get up eight. Ease is a greater threat to progress than hardship.
+Ease is a greater threat to progress than hardship.
+So, keep moving, keep growing, keep learning. See you at work"""
+text = re.sub(r'[[0-9]*]', ' ', text)
+text = re.sub(r's+', ' ', text)
+import re
+text = re.sub(r'[[0-9]{}*]', ' ', text)
+formatted_text = re.sub('[^a-zA-Z]', ' ', text)
+print(formatted_text)
+from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize, sent_tokenize
+stopWords = set(stopwords.words("english"))
+words = word_tokenize(formatted_text)
+wordfreq = {}
+for word in words:
+    if word in stopWords:
+        continue
+    if word in wordfreq:
+        wordfreq[word] += 1
+    else:
+        wordfreq[word] = 1
+maximum_frequency = max(wordfreq.values())
+for word in wordfreq.keys():
+    wordfreq[word] = (wordfreq[word]/maximum_frequency)
+sentences = sent_tokenize(text)
+sentenceValue = {}
+for sentence in sentences:
+    for word, freq in wordfreq.items():
+        if word in sentence.lower():
+            if sentence in sentenceValue:
+                sentenceValue[sentence] += freq
+            else:
+                sentenceValue[sentence] = freq
+import heapq
+summary = ''
+summary_sentences = heapq.nlargest(4, sentenceValue, key=sentenceValue.get)
+summary = ' '.join(summary_sentences)
+print(summary)summary_sentences = heapq.nlargest(4, sentenceValue, key=sentenceValue.get)
+summary = ' '.join(summary_sentences)
+print(summary)

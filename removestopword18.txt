@@ -1,0 +1,27 @@
+18)Consider any text paragraph. Remove the stopwords. Tokenize the paragraph to extract words and sentences. Calculate the word frequency distribution and plot the frequencies. Plot the wordcloud of the text.
+import nltk  
+  import re
+from nltk.tokenize import sent_tokenize
+from nltk.tokenize import word_tokenize
+from nltk.probability import FreqDist
+text="""So, keep working. Keep striving. Never give up. Fall down seven times,
+get up eight. Ease is a greater threat to progress than hardship.
+Ease is a greater threat to progress than hardship.
+So, keep moving, keep growing, keep learning. See you at work"""
+tokenized_text_data=sent_tokenize(text)
+tokenized_words=word_tokenize(text)
+print("Tokenized Sentences : \n", tokenized_text_data, "\n")
+print("Tokenized Words : \n",tokenized_words, "\n")
+from nltk.corpus import stopwords
+stop_words_data=set(stopwords.words("english"))
+filtered_words_list=[]
+for words in tokenized_words:
+    if words not in stop_words_data:
+        filtered_words_list.append(words)
+print("Tokenized Words : \n",tokenized_words,"\n")
+print("Filtered Words : \n",filtered_words_list,"\n")
+frequency_distribution=FreqDist(tokenized_words)
+print(frequency_distribution)
+import matplotlib.pyplot as plt
+frequency_distribution.plot(56,cumulative=False)
+plt.show()

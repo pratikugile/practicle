@@ -1,0 +1,27 @@
+19)Download the movie_review.csv dataset from Kaggle by using the following link : https://www.kaggle.com/nltkdata/movie-review/version/3?select=movie_review.csv
+to perform sentiment analysis on above dataset 
+# Import the necessary packages from nltk.corpus import stopwords 
+from nltk.sentiment.vader import SentimentIntensityAnalyzer from wordcloud import WordCloud, get_single_color_func import matplotlib.pyplot as plt import pandas as pd import numpy as np 
+# Read Movies Reviews Data CSV file. 
+movies_data=pd.read_csv('movie_review.csv') # Convert the column data type from ndarray to string. movies_reviews=movies_data['text'].values.astype(str) movies_reviews1=np.array_str(movies_reviews) # It will find the stowords in English language. 
+stop_words_data=set(stopwords.words("english")) words=movies_reviews1.split() # Remove Duplicate Values final_data=[] for w in words:  if w not in final_data:  final_data.append(w) 
+# Create dictionaries to store positive and negative words with polarity. 
+positive_words=dict() negative_words=dict() 
+# Create lists to store positive and negative words without polarity. 
+positive=[] negative=[] # Sentiment Analysis 
+sentiment_analyzer=SentimentIntensityAnalyzer() for i in words: 
+ if not i.lower() in stop_words_data: # It will remove stopwords. 
+ polarity=sentiment_analyzer.polarity_scores(i)  if polarity['compound']>=0.05: # Positive Sentiment  positive_words[i]=polarity['compound']  if polarity['compound']<=-0.05: # Negative Sentiment  negative_words[i]=polarity['compound'] 
+for key,value in positive_words.items(): 
+ positive.append(key) for key,value in negative_words.items(): 
+ negative.append(key) 
+# Create a dictionary to mention the colors : green for positive and red for  negative 
+coloured_words={"green":positive,"red":negative} # Implement separate colour assignments class ColourAssignment(object): 
+ # Functions to give different colours on the basis of sentiments.  def __init__(self,coloured_words,default):  self.coloured_words=[ 
+ (get_single_color_func(colour),set(words))  for (colour,words) in coloured_words.items()]  self.default=get_single_color_func(default)   
+ def get_colour(self,word):  try: 
+ colour=next( 
+ colour for (colour,words) in self.coloured_words  if word in words)  except StopIteration:  colour=self.default 
+ return colour   
+ def __call__(self,word, **kwargs): 
+ return self.get_colour(word) (word, **kwargs) 

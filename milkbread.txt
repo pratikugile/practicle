@@ -1,0 +1,21 @@
+6)Apriori algorith,ALLCreate the following dataset in python & Convert the categorical values into numeric format. Apply the apriori algorithm on the above dataset to generate the frequent itemsets and association rules. Repeat the process with different min_sup values.
+ 
+import pandas as pd
+from mlxtend.frequent_patterns import apriori, association_rules
+transactions=[['milk','bread'],
+ ['Bread','Diaper','Beer','Egg'],
+ ['Milk','Diaper','Beer','Coke'],
+ ['Milk','Bread','Diaper','Beer'],
+ ['Milk','Bread','Diaper','Coke']]
+from mlxtend.preprocessing import TransactionEncoder
+te=TransactionEncoder()
+te_array=te.fit(transactions).transform(transactions)
+df=pd.DataFrame(te_array, columns=te.columns_)
+print(df)
+print("****************************************************")
+freq_items = apriori(df, min_support = 0.5, use_colnames = True)
+print(freq_items)
+print("****************************************************")
+rules=association_rules(freq_items,metric ='support', min_threshold=0.05)
+rules=rules.sort_values(['support','confidence'],ascending=[False,False])
+print(rules)
